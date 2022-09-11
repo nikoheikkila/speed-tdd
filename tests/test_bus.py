@@ -34,3 +34,8 @@ def test_bus_cannot_decelerate_to_higher_speed() -> None:
     bus.decelerate(30)
 
     assert bus.speed == 20
+
+def test_bus_has_an_unarmed_bomb() -> None:
+    bus = Bus()
+
+    assert bus.bomb.is_unarmed
