@@ -1,30 +1,42 @@
-class Bomb:
-    armed: bool
-    exploded: bool
+from dataclasses import dataclass
+from enum import IntEnum
 
-    def __init__(self) -> None:
-        self.armed = False
-        self.exploded = False
+class BombState(IntEnum):
+    UNARMED = 1
+    ARMED = 2
+    EXPLODED = 3
+
+@dataclass
+class Bomb:
+    state: BombState = BombState.UNARMED
+    trigger_speed: int = 50
+
+    def arm(self) -> None:
+        self.state = BombState.ARMED
+
+    def explode(self) -> None:
+        self.state = BombState.EXPLODED
 
     @property
     def is_unarmed(self) -> bool:
-        return self.armed == False
+        return self.state == BombState.UNARMED
 
     @property
     def is_armed(self) -> bool:
-        return self.armed == True
+        return self.state == BombState.ARMED
 
     @property
     def is_exploded(self) -> bool:
-        return self.exploded == True
+        return self.state == BombState.EXPLODED
 
+
+@dataclass(unsafe_hash=True)
 class Passenger:
     name: str
-    is_alive: bool
+    is_alive: bool = True
 
-    def __init__(self, name: str) -> None:
-        self.name = name
-        self.is_alive = True
+    def kill(self) -> None:
+        self.is_alive = False
 
     @property
     def is_hero(self) -> bool:
@@ -32,7 +44,7 @@ class Passenger:
 
     @property
     def is_dead(self) -> bool:
-        return self.is_alive == False
+        return not self.is_alive
 
 class Bus:
     speed: int
@@ -50,16 +62,34 @@ class Bus:
     def accelerate(self, speed: int) -> None:
         if speed > self.speed:
             self.speed = speed
-            if self.speed >= 50 and self.bomb.is_unarmed:
-                self.bomb.armed = True
+
+        if self.should_arm_bomb:
+            self.bomb.arm()
 
     def decelerate(self, speed: int) -> None:
         if speed < self.speed:
             self.speed = speed
-            if self.speed <= 50 and self.bomb.is_armed:
-                self.bomb.exploded = True
-                if any(passenger.is_hero for passenger in self.passengers):
-                    pass
-                else:
-                    for passenger in self.passengers:
-                        passenger.is_alive = False
+
+        if self.should_explode:
+            self.explode()
+
+    def explode(self) -> None:
+        self.bomb.explode()
+
+        if not self.is_hero_onboard:
+            self.kill_all_passengers()
+
+    def kill_all_passengers(self) -> None:
+        [passenger.kill() for passenger in self.passengers]
+
+    @property
+    def should_arm_bomb(self) -> bool:
+        return self.bomb.is_unarmed and self.speed >= self.bomb.trigger_speed
+
+    @property
+    def should_explode(self) -> bool:
+        return self.bomb.is_armed and self.speed <= self.bomb.trigger_speed
+
+    @property
+    def is_hero_onboard(self) -> bool:
+        return any(passenger.is_hero for passenger in self.passengers)
