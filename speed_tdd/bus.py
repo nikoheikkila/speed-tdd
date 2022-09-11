@@ -1,11 +1,10 @@
-class Explosion(Exception):
-    pass
-
 class Bomb:
     armed: bool
+    exploded: bool
 
     def __init__(self) -> None:
         self.armed = False
+        self.exploded = False
 
     @property
     def is_unarmed(self) -> bool:
@@ -15,8 +14,25 @@ class Bomb:
     def is_armed(self) -> bool:
         return self.armed == True
 
+    @property
+    def is_exploded(self) -> bool:
+        return self.exploded == True
+
 class Passenger:
-    pass
+    name: str
+    is_alive: bool
+
+    def __init__(self, name: str) -> None:
+        self.name = name
+        self.is_alive = True
+
+    @property
+    def is_hero(self) -> bool:
+        return self.name == "Keanu Reeves"
+
+    @property
+    def is_dead(self) -> bool:
+        return self.is_alive == False
 
 class Bus:
     speed: int
@@ -41,4 +57,9 @@ class Bus:
         if speed < self.speed:
             self.speed = speed
             if self.speed <= 50 and self.bomb.is_armed:
-                raise Explosion()
+                self.bomb.exploded = True
+                if any(passenger.is_hero for passenger in self.passengers):
+                    pass
+                else:
+                    for passenger in self.passengers:
+                        passenger.is_alive = False
