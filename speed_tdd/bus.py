@@ -13,4 +13,5 @@ class Bus:
         self.passengers.add(passenger)
 
     def accelerate(self, speed: int) -> None:
-        self.speed = speed
+        if speed > self.speed:
+            self.speed = speed
