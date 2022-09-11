@@ -91,11 +91,11 @@ class Passenger:
     pass
 
 class Bus:
-+    speed: int
++   speed: int
     passengers: set[Passenger]
 
     def __init__(self) -> None:
-+        self.speed = 0
++       self.speed = 0
         self.passengers = set()
 
     def pick(self, passenger: Passenger) -> None:
@@ -158,7 +158,7 @@ As it stands, our bus cannot slow down at all and is a severe threat to the live
 class Bus:
 
 +    def decelerate(self, speed: int) -> None:
-+        self.speed = speed
++       self.speed = speed
 ```
 
 ### 5. The bus cannot decelerate to a higher speed
@@ -182,7 +182,7 @@ What would happen if you suddenly hit the brakes and the bus would accelerate to
 class Bus:
 
     def decelerate(self, speed: int) -> None:
-+        if speed < self.speed:
++       if speed < self.speed:
             self.speed = speed
 ```
 
@@ -213,11 +213,11 @@ Finally, the plot thickens! There is a bitter older man portrayed by excellent *
 +    armed: bool
 +
 +    def __init__(self) -> None:
-+        self.armed = False
++       self.armed = False
 +
 +    @property
 +    def is_unarmed(self) -> bool:
-+        return self.armed == False
++       return self.armed == False
 
 class Passenger:
     pass
@@ -225,12 +225,12 @@ class Passenger:
 class Bus:
     speed: int
     passengers: set[Passenger]
-+    bomb: Bomb
++   bomb: Bomb
 
     def __init__(self) -> None:
         self.speed = 0
         self.passengers = set()
-+        self.bomb = Bomb()
++       self.bomb = Bomb()
 ```
 
 ### 7. When the bus accelerates to 50 miles per hour, the bomb arms itself
@@ -265,15 +265,15 @@ class Bomb:
 
 +    @property
 +    def is_armed(self) -> bool:
-+        return self.armed == True
++       return self.armed == True
 
 class Bus:
 
     def accelerate(self, speed: int) -> None:
         if speed > self.speed:
             self.speed = speed
-+            if self.speed >= 50 and self.bomb.is_unarmed:
-+                self.bomb.armed = True
++           if self.speed >= 50 and self.bomb.is_unarmed:
++               self.bomb.armed = True
 ```
 
 ### 8. When the bomb is armed, and the bus decelerates to 50 miles per hour, the bomb explodes
@@ -299,7 +299,7 @@ To keep us on the edge of the driver's seat, the bomb explodes whenever we decel
 +    bus.accelerate(51)
 +
 +    with raises(Explosion):
-+        bus.decelerate(50)
++       bus.decelerate(50)
 ```
 
 🟢 To make the test pass, we check that the speed is correct and the bomb is armed. Next, we may rest in peace, unless…
@@ -313,8 +313,8 @@ class Bus:
     def decelerate(self, speed: int) -> None:
         if speed < self.speed:
             self.speed = speed
-+            if self.speed <= 50 and self.bomb.is_armed:
-+                raise Explosion()
++           if self.speed <= 50 and self.bomb.is_armed:
++               raise Explosion()
 ```
 
 ### 9. Belay that order! — the hero can still save the day
@@ -345,11 +345,11 @@ We have happily neglected our passengers and forgotten that **Keanu Reeves** has
 ```diff
 class Bomb:
     armed: bool
-+    exploded: bool
++   exploded: bool
 
     def __init__(self) -> None:
         self.armed = False
-+        self.exploded = False
++       self.exploded = False
 
     @property
     def is_unarmed(self) -> bool:
@@ -361,7 +361,7 @@ class Bomb:
 
 +    @property
 +    def is_exploded(self) -> bool:
-+        return self.exploded == True
++       return self.exploded == True
 
 class Passenger:
 -    pass
@@ -369,21 +369,20 @@ class Passenger:
 +    is_alive: bool
 +
 +    def __init__(self, name: str) -> None:
-+        self.name = name
-+        self.is_alive = True
++       self.name = name
++       self.is_alive = True
 +
 +    @property
 +    def is_hero(self) -> bool:
-+        return self.name == "Keanu Reeves"
++       return self.name == "Keanu Reeves"
 
 class Bus:
     speed: int
     passengers: set[Passenger]
     bomb: Bomb
 
-    def __init__(self) -> None:
-        self.speed = 0
-@@ -36,9 +51,12 @@ class Bus:
+    def accelerate(self, speed: int) -> None:
+        if speed > self.speed:
             self.speed = speed
             if self.speed >= 50 and self.bomb.is_unarmed:
                 self.bomb.armed = True
@@ -392,9 +391,9 @@ class Bus:
         if speed < self.speed:
             self.speed = speed
             if self.speed <= 50 and self.bomb.is_armed:
-+                if any(passenger.is_hero for passenger in self.passengers):
-+                    self.bomb.exploded = True
-+                else:
++               if any(passenger.is_hero for passenger in self.passengers):
++                   self.bomb.exploded = True
++               else:
                     raise Explosion()
 ```
 
@@ -409,15 +408,15 @@ Right now, there's not much sense in raising any exceptions. Moreover, while pra
 
 def test_when_the_bomb_is_armed_and_the_bus_decelerates_to_50_mph_the_bomb_explodes() -> None:
     bus = Bus()
-+    passenger = Passenger(name="Unlucky Civilian")
-+    bus.pick(passenger)
++   passenger = Passenger(name="Unlucky Civilian")
++   bus.pick(passenger)
     bus.accelerate(51)
 
--    with raises(Explosion):
-    bus.decelerate(50)
+-   with raises(Explosion):
++   bus.decelerate(50)
 
-+    assert bus.bomb.is_exploded
-+    assert passenger.is_dead
++   assert bus.bomb.is_exploded
++   assert passenger.is_dead
 ```
 
 🟢 To make our test pass, we define what it means when our passenger dies. That is, they are not alive, obviously. We also commit an ugly hack to our horrible method, which kills all our passengers in case the bomb goes off.
@@ -428,8 +427,8 @@ def test_when_the_bomb_is_armed_and_the_bus_decelerates_to_50_mph_the_bomb_explo
 
 class Passenger:
 
-+   @property
-+   def is_dead(self) -> bool:
++    @property
++    def is_dead(self) -> bool:
 +       return self.is_alive == False
 
 class Bus:
@@ -438,14 +437,14 @@ class Bus:
         if speed < self.speed:
             self.speed = speed
             if self.speed <= 50 and self.bomb.is_armed:
--                if any(passenger.is_hero for passenger in self.passengers):
-                self.bomb.exploded = True
-+                if any(passenger.is_hero for passenger in self.passengers):
-+                    pass
+-               if any(passenger.is_hero for passenger in self.passengers):
+                    self.bomb.exploded = True
++               if any(passenger.is_hero for passenger in self.passengers):
++                   pass
                 else:
--                    raise Explosion()
-+                    for passenger in self.passengers:
-+                        passenger.is_alive = False
+-                   raise Explosion()
++                   for passenger in self.passengers:
++                       passenger.is_alive = False
 ```
 
 ## Red-green cycles are done — time to refactor
