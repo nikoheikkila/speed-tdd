@@ -59,19 +59,20 @@ class Bus:
         self.passengers = set()
         self.bomb = Bomb()
 
-    def pick(self, passenger: Passenger) -> None:
-        self.passengers.add(passenger)
+    def pick(self, *passengers: Passenger) -> None:
+        for passenger in passengers:
+            self.passengers.add(passenger)
 
-    def accelerate(self, speed: int) -> None:
-        if speed > self.speed:
-            self.speed = speed
+    def accelerate(self, to: int) -> None:
+        if to > self.speed:
+            self.speed = to
 
         if self.should_arm_bomb:
             self.bomb.arm()
 
-    def decelerate(self, speed: int) -> None:
-        if speed < self.speed:
-            self.speed = speed
+    def decelerate(self, to: int) -> None:
+        if to < self.speed:
+            self.speed = to
 
         if self.should_explode:
             self.explode()
@@ -85,6 +86,9 @@ class Bus:
     def kill_all_passengers(self) -> None:
         [passenger.kill() for passenger in self.passengers]
 
+    def driving_at(self, speed: int) -> bool:
+        return self.speed == speed
+
     @property
     def should_arm_bomb(self) -> bool:
         return self.bomb.is_unarmed and self.speed >= self.bomb.trigger_speed
@@ -96,3 +100,11 @@ class Bus:
     @property
     def is_hero_onboard(self) -> bool:
         return any(passenger.is_hero for passenger in self.passengers)
+
+    @property
+    def can_explode(self) -> bool:
+        return self.bomb.is_armed
+
+    @property
+    def is_exploded(self) -> bool:
+        return self.bomb.is_exploded
