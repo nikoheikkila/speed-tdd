@@ -1,3 +1,5 @@
+![Cover Image](test-driven-development-on-a-bus-ride-to-hell.jpg)
+
 # Test-Driven Development on a Bus Ride to Hell
 
 I'm going to admit something: I didn't understand test-driven development for a long time. It felt mysterious, confusing, and painful. Yet, I was interested in all the testimonies of people practising it and keeping their codebase in great shape. So I tried to practice it from time to time. I failed again and again.
