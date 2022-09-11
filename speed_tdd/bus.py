@@ -1,3 +1,6 @@
+class Explosion(Exception):
+    pass
+
 class Bomb:
     armed: bool
 
@@ -37,3 +40,5 @@ class Bus:
     def decelerate(self, speed: int) -> None:
         if speed < self.speed:
             self.speed = speed
+            if self.speed <= 50 and self.bomb.is_armed:
+                raise Explosion()

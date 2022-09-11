@@ -1,4 +1,5 @@
-from speed_tdd.bus import Bus, Passenger
+from speed_tdd.bus import Bus, Passenger, Explosion
+from pytest import raises
 
 def test_bus_accepts_passengers() -> None:
     bus = Bus()
@@ -45,3 +46,10 @@ def test_when_the_bus_accelerates_to_50_mph_the_bomb_is_armed() -> None:
     bus.accelerate(50)
 
     assert bus.bomb.is_armed
+
+def test_when_the_bomb_is_armed_and_the_bus_decelerates_to_50_mph_the_bomb_explodes() -> None:
+    bus = Bus()
+    bus.accelerate(51)
+
+    with raises(Explosion):
+        bus.decelerate(50)
