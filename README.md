@@ -29,6 +29,8 @@ We can extract the following testable acceptance criteria from the film's storyl
 
 We will start modelling these expectations in our test code and solve one problem at a time with a minimal amount of production code. After each passing test, we commit and push our changes to the mainline. Chances are here is where it starts to sound unfathomable and magical to you. Fear not; I will guide you.
 
+Throughout the upcoming sections, I will denote with a red circle 🔴 when we write a test and expect it fail. Consequently, I denote with a green circle 🟢 when we expect to make the test pass. Contrary to some TDD guides, I won't stop and refactor after every green step. I consider that to be a limiting practice. Instead, I will save the refactoring as the last step when I have confidence in my codebase.
+
 If you want to dig directly into the source code, check out the code in [**GitHub**](https://github.com/nikoheikkila/speed-tdd).
 
 ### 1. The bus accepts passengers
