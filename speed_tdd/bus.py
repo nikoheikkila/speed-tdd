@@ -8,6 +8,10 @@ class Bomb:
     def is_unarmed(self) -> bool:
         return self.armed == False
 
+    @property
+    def is_armed(self) -> bool:
+        return self.armed == True
+
 class Passenger:
     pass
 
@@ -27,6 +31,8 @@ class Bus:
     def accelerate(self, speed: int) -> None:
         if speed > self.speed:
             self.speed = speed
+            if self.speed >= 50 and self.bomb.is_unarmed:
+                self.bomb.armed = True
 
     def decelerate(self, speed: int) -> None:
         if speed < self.speed:

@@ -39,3 +39,9 @@ def test_bus_has_an_unarmed_bomb() -> None:
     bus = Bus()
 
     assert bus.bomb.is_unarmed
+
+def test_when_the_bus_accelerates_to_50_mph_the_bomb_is_armed() -> None:
+    bus = Bus()
+    bus.accelerate(50)
+
+    assert bus.bomb.is_armed
