@@ -15,3 +15,6 @@ class Bus:
     def accelerate(self, speed: int) -> None:
         if speed > self.speed:
             self.speed = speed
+
+    def decelerate(self, speed: int) -> None:
+        self.speed = speed
