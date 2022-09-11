@@ -1,10 +1,12 @@
 from dataclasses import dataclass
 from enum import IntEnum
 
+
 class BombState(IntEnum):
     UNARMED = 1
     ARMED = 2
     EXPLODED = 3
+
 
 @dataclass
 class Bomb:
@@ -45,6 +47,7 @@ class Passenger:
     @property
     def is_dead(self) -> bool:
         return not self.is_alive
+
 
 class Bus:
     speed: int
