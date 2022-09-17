@@ -2,17 +2,32 @@
 
 # Test-Driven Development on a Bus Ride to Hell
 
-I'm going to admit something: I didn't understand test-driven development for a long time. It felt mysterious, confusing, and painful. Yet, I was interested in all the testimonies of people practising it and keeping their codebase in great shape. So I tried to practice it from time to time. I failed again and again.
+I'm going to admit something: I had trouble understanding test-driven development (TDD) and it took me a long time to get over it.
 
-Driving the code's design through tests was intimidating and challenging for me. However, when I finally understood that I was working with too massive batches (*commits*) and started to radically look at decreasing the feedback loop, it got gradually easier. Today, I use TDD for *almost* all code I write.
+TDD felt mysterious, confusing, and painful. Yet, I was fascinated in 1) all the testimonies of people who practised it and kept their codebase in great shape, and 2) its nature of turning upside down the way I build software. The latter reminded me of the first steps I took with functional programming and writing functions in declarative style in contrast to imperative style. I had to detach my brains from the skull, turn them around, and place them back in — figuratively speaking, of course.
 
-You may be stuck in the quagmire too. To help you out, I've written a tutorial on how to approach writing tests before the production code in tiny batches.
+So I tried to practice TDD from time to time. I failed again and again.
+
+Driving the design of my code through tests was intimidating and challenging. However, when I finally understood that I was working with too massive batches (_commits_) and started to radically look at decreasing the feedback loop, it got gradually easier. Today, I use TDD for _almost_ all the code I write.
+
+You may be stuck in that particular quagmire too. Chances are you are asking yourself the following questions:
+
+- how can I split this feature into smaller tasks?
+- what test should I write first?
+- how do I organise my test code?
+- what should I assert if my logic is not yet completed?
+
+To help you start the journey, I've written a tutorial on how to approach writing tests before the production code in tiny batches. Fasten your seatbelts, we're going on a ride but I assure you it's going to be smooth.
 
 ## Prerequisites
 
-I expect you know your way around the basic Git commands and Python programming language, which we use as examples here. You don't necessarily need to have watched the fantastic Oscar-winning film [**Speed (1994)**](https://www.imdb.com/title/tt0111257/) directed by **Jan de Bont**, and starring **Keanu Reeves** and **Sandra Bullock**, but it might help you to tune into the atmosphere.
+Before continuing, I expect you know your way around the basic Git commands and Python programming language, which we use as examples here.
 
-If you're interested in how I work with small commits, read my earlier post about [**micro-commits**](https://nikoheikkila.fi/blog/a-practical-guide-to-micro-commits/).
+The outline of this tutorial is to follow the Red-Green cycles by first writing a failing test and then making it pass by writing simple production code. After each failing test, we record our changes in a new micro-commit — think it as a commit but a very small one.
+
+> If you're interested in how I work with small commits, read my earlier post about [**micro-commits**](https://nikoheikkila.fi/blog/a-practical-guide-to-micro-commits/).
+
+You don't necessarily need to have watched the fantastic Oscar-winning film [**Speed (1994)**](https://www.imdb.com/title/tt0111257/) directed by **Jan de Bont**, and starring **Keanu Reeves** and **Sandra Bullock**, but it might help you to tune into the atmosphere.
 
 ## Requirements
 
@@ -27,9 +42,13 @@ We can extract the following testable acceptance criteria from the film's storyl
 - [ ] When the bomb is unarmed **and** the bus accelerates to $v \geq 50$ mph, the bomb arms itself.
 - [ ] When the bomb is armed **and** the bus decelerates to $v \leq 50$, the bomb explodes **unless** there is at least one passenger on the bus who can save the day.
 
-We will start modelling these expectations in our test code and solve one problem at a time with a minimal amount of production code. After each passing test, we commit and push our changes to the mainline. Chances are here is where it starts to sound unfathomable and magical to you. Fear not; I will guide you.
+We will start modelling these expectations in our test code and solve one problem at a time with a minimal amount of production code.
 
-Throughout the upcoming sections, I will denote with a red circle 🔴 when we write a test and expect it fail. Consequently, I denote with a green circle 🟢 when we expect to make the test pass. Contrary to some TDD guides, I won't stop and refactor after every green step. I consider that to be a limiting practice. Instead, I will save the refactoring as the last step when I have confidence in my codebase.
+The process of extracting automatically testable tasks from a list of requirements is inspired by the book [**Learning Test-Driven Development**](https://www.oreilly.com/library/view/learning-test-driven-development/9781098106461/) by **Saleem Siddiqui**. I warmly recommended reading that book if you regularly work with Javascript, Python, or Golang and are interested in TDD.
+
+Throughout the upcoming sections, I will denote with a red circle 🔴 when we write a test and expect it fail. Consequently, I denote with a green circle 🟢 when we expect to make the test pass.
+
+Contrary to some TDD guides, I won't stop and refactor after every green step. I consider that to be a limiting practice. Instead, I will save the refactoring as the last step when I have a full confidence in my implementation.
 
 If you want to dig directly into the source code, check out the code in [**GitHub**](https://github.com/nikoheikkila/speed-tdd).
 
@@ -88,7 +107,7 @@ Now that our bus can pick up passengers, it would be great if it could also take
 +    assert bus.speed == 20
 ```
 
-🟢 To make the test pass, we must store the bus speed. Then we define the method to accelerate the bus to whatever speed we have. Finally, we discard the laws of physics momentarily to get to our goal.
+🟢 To make the test pass, we must store the bus speed in class context. Then we define the method to accelerate the bus to whatever speed we have. Finally, we discard the laws of physics momentarily to get to our goal.
 
 ```diff
 class Passenger:
@@ -246,7 +265,7 @@ class Bus:
 - [ ] When the bomb is unarmed **and** the bus accelerates to $v \geq 50$ mph, the bomb arms itself.
 - [ ] When the bomb is armed **and** the bus decelerates to $v \leq 50$, the bomb explodes **unless** there is at least one passenger on the bus who can save the day.
 
-The terrorist has designed the bomb to become armed when our bus accelerates to 50 miles per hour. Makes you hope we would have set the maximum speed of our bus to 49 miles per hour, doesn't it?
+The terrorist has designed the bomb to become armed when our bus accelerates to 50 miles per hour. Makes you hope we would have built the bus to have a maximum speed of 49 miles per hour earlier, don't you?
 
 🔴 We write a test where we accelerate the bus to 50 miles per hour and verify that the bomb is armed afterwards. But, for now, the bomb remains inactive, and our test fails.
 
@@ -258,7 +277,7 @@ The terrorist has designed the bomb to become armed when our bus accelerates to 
 +    assert bus.bomb.is_armed
 ```
 
-🟢 We make the test pass by checking the received speed instructions and arming the bomb when it exceeds 50 miles per hour. We also make a note of how our code is getting messier, but that is perfectly fine at this moment.
+🟢 We make the test pass by checking the received speed instructions and arming the bomb when it exceeds 50 miles per hour. We also make a note of how our code is getting messier due to a nested conditional, but that is perfectly fine at this moment.
 
 ```diff
 class Bomb:
@@ -291,7 +310,7 @@ class Bus:
 
 To keep us on the edge of the driver's seat, the bomb explodes whenever we decelerate the bus to under 50 miles per hour.
 
-🔴 For now, we resort to expecting an exception called `Explosion'whenever the bomb goes off, even after a minor slowdown. The test fails because our code doesn't raise such an exception.
+🔴 For now, we resort to expecting an exception called `Explosion` whenever the bomb goes off, even after a minor slowdown. The test fails because our code doesn't raise such an exception.
 
 ```diff
 -from speed_tdd.bus import Bus, Passenger
@@ -462,7 +481,7 @@ Looks like we are done here. Time to mark the feature as done and go home? Absol
 - [x] When the bomb is unarmed **and** the bus accelerates to $v \geq 50$ mph, the bomb arms itself.
 - [x] When the bomb is armed **and** the bus decelerates to $v \leq 50$, the bomb explodes **unless** there is at least one passenger on the bus who can save the day.
 
-In its current state, our codebase is ghastly with all the magic numbers, nested conditionals, and lack of abstractions. However, as professional software engineers, we should always adhere to the *boy scout rule*:
+In its current state, our codebase is ghastly with all the magic numbers, nested conditionals, and lack of abstractions. However, as professional software engineers, we should always adhere to the _boy scout rule_:
 
 > "Always leave the ~~campground~~ codebase cleaner than you found it."
 
@@ -562,8 +581,8 @@ def test_hero_can_save_the_day_from_bus_explosion(
 
 **What did we do?**
 
-- Use test fixtures to inject the bus, the driver, and the hero into our tests.
-- Arranged the test code to *Arrange-Act-Assert* blocks for improved readability.
+- Use test fixtures to inject the bus, the driver, and the hero into our tests. I recommended using injectable test fixtures in any test framework you are using to keep the setup phase thin and tests readable.
+- Arranged the test code to _Arrange-Act-Assert_ blocks for improved readability.
 
 ### Refactoring the production code
 
@@ -693,27 +712,27 @@ class Bus:
 
 Our bus is clearly an MVP, but it successfully transports people somewhere, even though endangering their lives.
 
-What else could we build with our tests? Below are some suggestions, which I leave unimplemented for brevity.
+What else could we build with our tests? Below are some suggestions, which I leave unimplemented for the sake of this tutorial's brevity.
 
-- The bus explicitly has a driver and cannot travel without one
-- The bus has a maximum speed it can travel
-- The bus cannot travel at a negative speed
-- Unarmed bomb cannot explode
-- Armed bombs can be disarmed
-- The bomb can be removed from the bus
-- Exploded bomb cannot become unarmed or armed again
-- The exploded bus cannot be driven again
-- Dead passengers cannot ride onboard the bus (unless it's a Halloween-themed sequel)
-- Keanu Reeves doesn't need to be the only hero in the world
+- The bus explicitly has a driver and cannot travel without one.
+- The bus has a maximum speed it can travel.
+- The bus cannot travel at a negative speed.
+- Unarmed bombs cannot explode.
+- Armed bombs can be disarmed.
+- The bomb can be removed from the bus.
+- Exploded bombs cannot become unarmed or armed again.
+- The exploded bus cannot be driven again.
+- Dead passengers cannot ride onboard the bus — unless it's a Halloween-themed sequel.
+- Keanu Reeves is not the only hero in the world.
 
 If you want to practice, fork the repository, implement the code according to TDD and requirements and show me the results.
 
 ## Conclusion
 
-In this tutorial, I have shown you the power of TDD when slicing user stories.
+In this tutorial, I have shown you the power of TDD as a solid engineering technique when slicing features.
 
-Typically, we start our work with a list of requirements that users would like to see us implement. Next, we have to devise clever ways to make each slice a deliverable item that our users can try out. Then, and only then, can we achieve actionable feedback and correct the course we are on.
+Typically, we start our work with a list of requirements that users or stakeholders would like to see us implement. Next, we have to devise clever ways to make each slice a deliverable item that our users can try out. Then, and only then, can we achieve actionable feedback and correct the course we are on. This is radically agile software development, which many organisations fail to follow because they deliver too large batches too late.
 
 When I started grasping TDD and micro-commits, the notion of continuously integrating our work and delivering it to users — **the absolute CI/CD** — started to feel less intimidating and more like a safety harness protecting me against bad decisions.
 
-I'm not looking back to the world of test-last development, big batches, continuous isolation, and eventually broken delivery; I hope you're neither.
+I'm not looking back to the world of test-last development, big batches, continuous isolation, and eventually broken delivery; I hope after reading this tutorial, you share the same point of view with me.
